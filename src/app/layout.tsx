@@ -3,7 +3,6 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import NavbarPage from "@/components/custom/Navbar";
-import { getProductSEOData } from "@/services/seo";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -11,11 +10,7 @@ const poppins = Poppins({
   variable: "--font-poppins",
 });
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug?: string[] };
-}): Promise<Metadata> {
+export async function generateMetadata(): Promise<Metadata> {
   try {
     // const headerList = headers();
     // console.log("headerList",headerList);

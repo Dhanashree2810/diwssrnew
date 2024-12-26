@@ -27,7 +27,7 @@ interface AppUser {
 
 export default function AppUserList(props: any) {
   const [appUsers, setAppUsers] = useState<AppUser[]>([]);
-
+  
   useEffect(() => {
     if (props?.appUserData) {
       setAppUsers(props.appUserData);
@@ -35,7 +35,7 @@ export default function AppUserList(props: any) {
   }, [props.appUserData]);
 
 
-  const itemTemplate = (user: any, index: number) => {
+  const itemTemplate = (user: any) => {
     return (
       <div key={user.id} className='block'>
         <Card key={user.id} className="w-full h-auto lg:h-[250px] flex flex-col justify-between">
@@ -79,8 +79,8 @@ export default function AppUserList(props: any) {
   const listTemplate = (items: any) => {
     if (!items || items.length === 0) return null;
 
-    let list = items.map((product: any, index: number) => {
-      return itemTemplate(product, index);
+    let list = items.map((product: any) => {
+      return itemTemplate(product);
     });
 
     return <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">{list}</div>;

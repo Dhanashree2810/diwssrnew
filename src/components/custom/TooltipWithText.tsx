@@ -8,7 +8,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { RiInformation2Line } from 'react-icons/ri';
 
-const TooltipWithText = ({ text }:any) => {
+const TooltipWithText = ({ text }: { text: string }) => {
     return (
         <TooltipProvider>
             <Tooltip>

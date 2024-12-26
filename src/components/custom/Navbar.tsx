@@ -3,7 +3,6 @@ import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { IoPerson } from "react-icons/io5";
-import { IoMdCart } from "react-icons/io";
 import { LogInIcon, LogOut } from 'lucide-react';
 import {
   DropdownMenu,

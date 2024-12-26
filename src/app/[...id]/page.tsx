@@ -13,7 +13,7 @@ export async function generateMetadata({
   const seoName = Id.length === 0 ? 'product' : Id.join('/');
   const seoData = seos.find((seo) => seo.name === seoName);
 
-  console.log("SEO Data:", seoData);
+  // console.log("SEO Data:", seoData);
 
   if (seoData) {
     return {
@@ -51,7 +51,7 @@ const EditProductPage = async ({
   params: Promise<{ id?: string[] }>
 }) => {
   const Id = (await params).id || [];
-  console.log("Id", Id);
+  // console.log("Id", Id);
 
   let content;
   if (Id.length === 1) {

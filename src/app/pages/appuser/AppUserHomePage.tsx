@@ -44,15 +44,64 @@ const settings = {
 };
 
 
-export default function AppUserHomePage(props: any) {
+interface SummaryData {
+    total: number;
+    maxNo: number;
+    minNo: number;
+    avgNo: number;
+}
+
+interface TopData {
+    id: number;
+    name: string;
+}
+
+interface LastData {
+    id: number;
+    name: string;
+}
+
+interface HtmlData {
+    name: string;
+    html: string;
+}
+
+interface ListHomeCommonData {
+    summaryData: SummaryData[];
+    topData: TopData[];
+    lastData: LastData[];
+}
+
+interface ListHomeCommonData {
+    summaryData: SummaryData[];
+    topData: TopData[];
+    lastData: LastData[];
+}
+
+interface HtmlDataWrapper {
+    htmlData: HtmlData[];
+}
+
+interface ListHomeUserData {
+    summaryData: SummaryData[];
+    topData: TopData[];
+    lastData: LastData[];
+}
+
+interface AppUserHomePageProps {
+    listHomeCommonData: ListHomeCommonData;
+    htmlData: HtmlDataWrapper;
+    listHomeUserData: ListHomeUserData;
+}
+
+export default function AppUserHomePage(props: AppUserHomePageProps) {
     const listHomeCommonData = props?.listHomeCommonData;
     const summaryData = listHomeCommonData?.summaryData;
     const topData = listHomeCommonData?.topData;
-    const listHtmlData = props?.htmlData;
-    const listHomeUserData = props?.listHomeUserData;
-
     
- 
+    // const listHtmlData = props?.htmlData;
+    const listHomeUserData = props?.listHomeUserData;
+    
     return (
         <div className="relative flex flex-col p-5">
             <div className="flex flex-col border-none mb-10">
@@ -120,7 +169,7 @@ export default function AppUserHomePage(props: any) {
 
                 <section>
                     <Slider {...settings} className="text-white">
-                        {topData.map((slide: any) => (
+                        {topData.map((slide:TopData) => (
                             <div key={slide.id} className="h-full flex items-center justify-center">
                                 <div className="grid grid-cols-1 max-w-full gap-5 items-center justify-center px-2 py-4 lg:px-4 lg:py-6">
                                     <div className="flex flex-col overflow-hidden p-5 shadow-lg rounded-lg bg-white">
@@ -133,7 +182,7 @@ export default function AppUserHomePage(props: any) {
                                         </div>
                                         <div className="text-center">
                                             <h4 className="text-lg font-semibold text-gray-600 mb-1">{slide.name}</h4>
-                                            <h6 className="text-gray-600 text-sm mb-3">{slide.emailId}</h6>
+                                            {/* <h6 className="text-gray-600 text-sm mb-3">{slide.emailId}</h6> */}
                                             <div className="car-buttons flex justify-center gap-3 mt-5">
                                                 <Link href={`/appuser/view/${slide.id}`} className="flex items-center justify-center rounded-full p-3 bg-gradient-to-r from-[#9333EA] to-[#609AF8]">
                                                     <CgEye className="text-white h-6 w-6" />
@@ -157,7 +206,7 @@ export default function AppUserHomePage(props: any) {
                                 <span className="text-xl font-semibold">Created by Me</span>
                             </div>
                             <ul>
-                                {listHomeUserData?.topData?.map((item: any) => (
+                                {listHomeUserData.topData.map((item:TopData) => (
                                     <li
                                         key={item.name}
                                         className="flex flex-row items-center justify-between gap-20 lg:gap-48 mb-8"
@@ -174,7 +223,7 @@ export default function AppUserHomePage(props: any) {
                                         <div className="flex flex-col justify-between items-start flex-1">
                                             <div>
                                                 <span className="font-medium text-gray-900">{item.name}</span>
-                                                <div className="text-gray-600">{item.emailId}</div>
+                                                {/* <div className="text-gray-600">{item.emailId}</div> */}
                                             </div>
                                             <div className="mt-2 flex space-x-2">
                                                 <Link
@@ -205,7 +254,7 @@ export default function AppUserHomePage(props: any) {
                             </div>
 
                             <ul>
-                                {listHomeCommonData?.topData?.map((item: any) => (
+                                {listHomeCommonData.topData.map((item:TopData) => (
                                     <li
                                         key={item.name}
                                         className="flex flex-row items-center justify-between gap-20 lg:gap-48 mb-8"
@@ -222,7 +271,7 @@ export default function AppUserHomePage(props: any) {
                                         <div className="flex flex-col justify-center items-start flex-1">
                                             <div>
                                                 <span className="font-medium text-gray-900">{item.name}</span>
-                                                <div className="text-gray-600">{item.emailId}</div>
+                                                {/* <div className="text-gray-600">{item.emailId}</div> */}
                                             </div>
                                             <div className="mt-2 flex space-x-2">
                                                 <Link
@@ -249,7 +298,7 @@ export default function AppUserHomePage(props: any) {
                 {listHomeCommonData?.lastData?.length > 0 && (
                     <section className="px-2 mt-10 lg:px-10">
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                            {listHomeCommonData.lastData.slice(0, 4).map((item: any, index: any) => (
+                            {listHomeCommonData.lastData.slice(0, 4).map((item: LastData, index: number) => (
                                 <Card key={index} className="shadow-md text-center">
                                     <Image
                                         src={user2}
@@ -276,7 +325,7 @@ export default function AppUserHomePage(props: any) {
                     </section>
                 )}
 
-                <div className="table-title">
+                {/* <div className="table-title">
                     {listHtmlData && listHtmlData.length && (
                         <div
                             dangerouslySetInnerHTML={{
@@ -284,7 +333,7 @@ export default function AppUserHomePage(props: any) {
                             }}
                         />
                     )}
-                </div>
+                </div> */}
             </div>
         </div>
     )

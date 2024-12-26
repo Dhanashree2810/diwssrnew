@@ -4,11 +4,12 @@ import TeamBanner from "@/app/pages/homes/TeamBanner";
 import AppUserList from "@/app/pages/appuser/AppUserList";
 import { useUserLoginStore } from "../../../globalstate";
 import { useEffect, useState } from "react";
+import { User } from "@/types/appuser";
 
 export default function Page() {
   const { userLoginInfo } = useUserLoginStore();
   const [userToken, setUserToken] = useState<string>();
-  const [appUserData, setAppUserData] = useState<any>(null);
+  const [appUserData, setAppUserData] = useState<User>();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -21,14 +22,11 @@ export default function Page() {
       const fetchData = async () => {
         try {
           const data = await fetchAppUsers(userToken);
-          console.log("fetchAppUsers data",data);
-          
           setAppUserData(data);
-        } catch (err) {
-          setError("Failed to fetch app user data. Please check your token.");
+        } catch {
+          setError("Failed to fetch home data. Please check your token.");
         }
       };
-
       fetchData();
     }
   }, [userToken]);

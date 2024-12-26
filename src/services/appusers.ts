@@ -1,3 +1,4 @@
+import { User } from "@/types/appuser";
 
 
 interface CustomFile {
@@ -6,7 +7,7 @@ interface CustomFile {
     type: string;
 }
 
-const fetchAppUsers = async (token?: string): Promise<any> => {
+const fetchAppUsers = async (token?: string) => {
     const payload = {
         form: null,
         condition: null
@@ -34,7 +35,7 @@ const fetchAppUsers = async (token?: string): Promise<any> => {
     }
 };
 
-const fetchAppUsersById = async (appuserID: any, token?: string): Promise<any> => {
+const fetchAppUsersById = async (appuserID: string, token?: string) => {
     const payload = {
         "id": appuserID
     }
@@ -63,7 +64,7 @@ const fetchAppUsersById = async (appuserID: any, token?: string): Promise<any> =
 };
 
 
-const DraftAppUsersById = async (appuserID: any, token?: string): Promise<any> => {
+const DraftAppUsersById = async (appuserID: number, token?: string) => {
     const payload = {
         "id": appuserID
     }
@@ -92,7 +93,7 @@ const DraftAppUsersById = async (appuserID: any, token?: string): Promise<any> =
 };
 
 
-const addAppUser = async (payload: any, token?: string): Promise<any> => {
+const addAppUser = async (payload: User, token?: string) => {
 
     try {
         const response = await fetch(
@@ -121,7 +122,7 @@ const addAppUser = async (payload: any, token?: string): Promise<any> => {
     }
 };
 
-const updateAppUser = async (payload: any, token?: string): Promise<any> => {
+const updateAppUser = async (payload: User, token?: string) => {
 
     try {
         const response = await fetch(
@@ -150,7 +151,7 @@ const updateAppUser = async (payload: any, token?: string): Promise<any> => {
     }
 };
 
-const deleteAppUser = async (userId: string, token?: string): Promise<any> => {
+const deleteAppUser = async (userId: string, token?: string) => {
     const payload = {
         Id: userId
     }
@@ -182,7 +183,7 @@ const deleteAppUser = async (userId: string, token?: string): Promise<any> => {
     }
 };
 
-const fileUploadAppUser = async (image: File, token?: string): Promise<any> => {
+const fileUploadAppUser = async (image: File, token?: string) => {
     try {
         const formDataImage = new FormData();
         formDataImage.append('file', image);
@@ -214,7 +215,7 @@ const fileUploadAppUser = async (image: File, token?: string): Promise<any> => {
 };
 
 
-const uploadAppUser = async (formData: FormData, token?: string): Promise<any> => {
+const uploadAppUser = async (formData: FormData, token?: string) => {
     try {
 
         const response = await fetch(
@@ -271,7 +272,7 @@ const downloadFileAppUser = async (file: CustomFile, token?: string): Promise<Bl
     }
 };
 
-const getHomeCommonData = async (token?: string): Promise<any> => {
+const getHomeCommonData = async (token?: string) => {
     const payload = {
         "type": "default",
         "pageType": "admin",
@@ -302,7 +303,7 @@ const getHomeCommonData = async (token?: string): Promise<any> => {
 };
 
 
-const getHtmlData = async (token?: string): Promise<any> => {
+const getHtmlData = async (token?: string) => {
     const payload = {
         "type": "default",
         "pageType": "admin",
@@ -334,7 +335,7 @@ const getHtmlData = async (token?: string): Promise<any> => {
 };
 
 
-const getHomeUserData = async (token?: string): Promise<any> => {
+const getHomeUserData = async (token?: string) => {
     const payload = {
         "type": "default",
         "pageType": "admin",
