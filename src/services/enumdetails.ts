@@ -1,6 +1,6 @@
 
 
-const fetchEnumDetailsData = async (token?: string): Promise<any> => {
+const fetchEnumDetailsData = async (token?: string) => {
     const payload = {
         "form": null,
         "condition": null

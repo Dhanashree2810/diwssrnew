@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Input } from '../ui/input';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import 'primeflex/primeflex.css';
-import Image from 'next/image';
 import { RiDeleteBin6Fill } from 'react-icons/ri';
-import { Button } from '../ui/button';
 import { FiPlus } from "react-icons/fi";
 
 
@@ -16,8 +14,8 @@ interface CustomFile {
 
 interface FileUploadProps {
     onFileUpload: (files: CustomFile[]) => void;
-    uploadFunction: (formData: FormData, tokenData?: any) => Promise<any>;
-    downloadFunction?: (file: CustomFile, tokenData?: any) => Promise<Blob>; // Made optional with ?
+    uploadFunction: (formData: FormData, tokenData?: string) => Promise<any>;
+    downloadFunction?: (file: CustomFile, tokenData?: string) => Promise<Blob>;
     multiple?: boolean;
     showImage?: boolean;
     accept?: string;
@@ -30,7 +28,6 @@ function FileUploadMain({
     uploadFunction,
     downloadFunction,
     multiple = false,
-    showImage = false,
     accept = '',
     tokenData,
     existingFiles = [],
@@ -56,9 +53,8 @@ function FileUploadMain({
 
             try {
                 const response = await uploadFunction(formData, tokenData);
-                console.log("response", response);
 
-                const validFilePath = `${process.env.NEXT_PUBLIC_API_URL}/ImportFiles/${response.filePath.replace(/\\/g, "/")}`;
+                // const validFilePath = `${process.env.NEXT_PUBLIC_API_URL}/ImportFiles/${response.filePath.replace(/\\/g, "/")}`;
                 newUploadedFiles.push({ fileName: response.fileName, filePath: response.filePath, type: response.type });
 
             } catch (error) {

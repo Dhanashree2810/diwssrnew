@@ -14,7 +14,11 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { FaEdit } from "react-icons/fa";
 import ImgViewer from "@/components/custom/ImgViewer";
+import { User } from "@/types/appuser";
 
+interface AppUsersViewPageProps {
+  appUserData: User;
+}
 
 const parseImageAndSetPreview = (jsonString: any, setImagePreview: any) => {
   try {
@@ -29,7 +33,7 @@ const parseImageAndSetPreview = (jsonString: any, setImagePreview: any) => {
 };
 
 
-export default function AppUsersViewPage(props: any) {
+export default function AppUsersViewPage({ appUserData }: any) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
@@ -40,21 +44,21 @@ export default function AppUsersViewPage(props: any) {
     isActive: false, isAdmin: false, hasImpersonateAccess: false, photoAttachment: null, role: '', publish: '', lastLogin: '',
     defaultLanguage: '', isPremiumUser: false, totalPlot: ''
   });
-  const totalTabs = 4;
-  const [gstCertificatePreview, setGstCertificatePreview] = useState([]);
-  const [photoShopFrontPreview, setPhotoShopFrontPreview] = useState([]);
-  const [visitingCardPreview, setVisitingCardPreview] = useState([]);
-  const [chequePreview, setChequePreview] = useState([]);
-  const [PhotoAttachmentPreview, setPhotoAttachmentPreview] = useState([]);
+  // const totalTabs = 4;
+  const [gstCertificatePreview, setGstCertificatePreview] = useState<string[]>([]);
+  const [photoShopFrontPreview, setPhotoShopFrontPreview] = useState<string[]>([]);
+  const [visitingCardPreview, setVisitingCardPreview] = useState<string[]>([]);
+  const [chequePreview, setChequePreview] = useState<string[]>([]);
+  const [PhotoAttachmentPreview, setPhotoAttachmentPreview] = useState<string[]>([]);
 
   useEffect(() => {
     getAppUsersData();
-  }, [props]);
+  }, [appUserData]);
 
   const getAppUsersData = async () => {
     try {
-      const data = props?.appUserData;
-
+      const data = appUserData;
+  
       if (data.gstCertificate) {
         parseImageAndSetPreview(data.gstCertificate, setGstCertificatePreview);
       }
@@ -62,9 +66,6 @@ export default function AppUsersViewPage(props: any) {
       if (data.photoShopFront) {
         parseImageAndSetPreview(data.photoShopFront, setPhotoShopFrontPreview);
       }
-
-      console.log("data.visitingCard", data.visitingCard);
-
 
       if (data.visitingCard) {
         parseImageAndSetPreview(data.visitingCard, setVisitingCardPreview);
@@ -83,19 +84,35 @@ export default function AppUsersViewPage(props: any) {
         lastLogin: data.lastLogin ? data.lastLogin.slice(0, 10) : '',
       });
 
+      // setFormData({
+      //   ...data,
+      //   id: String(data.id), // Convert id to string
+      //   lastLogin: data.lastLogin ? data.lastLogin.slice(0, 10) : '',
+      //   totalPlot: String(data.totalPlot), // Convert totalPlot to string
+      //   shopName: data.shopName || '',
+      //   pincode: data.pincode || '',
+      //   address: data.address || '',
+      //   addressLine: data.addressLine || '',
+      //   verifyShop: data.verifyShop || false, // Default to false
+      //   gst: data.gst || '',
+      //   gstOtp: data.gstOtp || '',
+      //   defaultLanguage: data.defaultLanguage || 'en', // Default to English
+      //   // Add other properties with defaults as necessary
+      // });
+
     } catch (error) {
       console.error("Error fetching App Users data:", error);
       setError("Error fetching App Users data.");
     }
   };
 
-  const getTabClassName = (index: any) =>
+  const getTabClassName = (index: number) =>
     `flex items-center justify-center w-10 h-10 rounded-full border-2 ${activeIndex === index
       ? 'bg-green-800 font-semibold text-white border-green-800'
       : 'bg-gray-200 text-gray-600 border-gray-400'
     }`;
 
-  const getTabLabelClassName = (index: any) =>
+  const getTabLabelClassName = (index: number) =>
     `text-center text-[12px] uppercase mt-2  ${activeIndex === index ? 'text-green-800 font-bold' : 'text-gray-600'
     }`;
 

@@ -34,6 +34,7 @@ import {
 import FileUploadMain from "@/components/custom/FileUploadMain";
 import { fetchEnumDetailsData } from "@/services/enumdetails";
 import { useUserLoginStore } from "../../../../globalstate";
+import { User } from "@/types/appuser";
 
 type FileData = {
   gstCertificate: never[];
@@ -424,16 +425,16 @@ const AppUserMainForm = ({ appUserData }: any) => {
         totalPlot: formData.totalPlot,
       };
 
-      const cleanedPayload = removeEmptyFields(payload);
+      const cleanedPayload: Partial<User> = removeEmptyFields(payload);
 
       let response;
       if (appUserData) {
         if (!formData.id) {
           throw new Error("ID is required for update.");
         }
-        response = await updateAppUser({ ...cleanedPayload, id: formData.id },userToken);
+        response = await updateAppUser({ ...cleanedPayload, id: formData.id }as User,userToken);
       } else {
-        response = await addAppUser(cleanedPayload,userToken);
+        response = await addAppUser(cleanedPayload as User, userToken);
       }
 
       if (response) {

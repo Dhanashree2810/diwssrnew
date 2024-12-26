@@ -1,42 +1,37 @@
-'use client'
-
+'use client';
 import { fetchAppUsersById } from '@/services/appusers';
 import AppUserMainForm from '@/app/pages/appuser/AppUserMainForm';
 import { useUserLoginStore } from '../../../../../globalstate';
 import { useEffect, useState } from 'react';
+import { User } from '@/types/appuser';
+import { use } from 'react';
 
-const EditAppUserPage = async ({
-  params,
-}: {
-  params: Promise<{ id: string }>
-}) => {
-  const { id } = await params;
+const EditAppUserPage = ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = use(params);
   const { userLoginInfo } = useUserLoginStore();
   const [userToken, setUserToken] = useState<string>();
-  const [appUserData, setAppUserData] = useState<any>(null);
+  const [appUserData, setAppUserData] = useState<User>();
   const [error, setError] = useState<string | null>(null);
 
-  // Set the user token once it is available
   useEffect(() => {
     const token = userLoginInfo?.token;
     setUserToken(token);
   }, [userLoginInfo]);
 
-  // Fetch data after userToken is set
   useEffect(() => {
     const fetchData = async () => {
       if (userToken && id) {
         try {
           const data = await fetchAppUsersById(id, userToken);
           setAppUserData(data);
-        } catch (err) {
-          setError("Failed to fetch user data. Please check your token.");
+        } catch {
+          setError('Failed to fetch user data. Please check your token.');
         }
       }
     };
 
     fetchData();
-  }, [userToken, id]); // Trigger fetching when either userToken or id changes
+  }, [userToken, id]);
 
   if (error) {
     return <div>{error}</div>;
