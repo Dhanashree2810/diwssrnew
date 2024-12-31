@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { LoginResponse } from '@/types/auth';
@@ -25,7 +26,6 @@ interface UserStore {
     clearLoginUserInfo: () => void;
 }
 
-
 export const useUserStore = create<UserStore>((set) => ({
     loginUserInfo: null,
     setLoginUserInfo: (user) => set({ loginUserInfo: user }),
@@ -51,8 +51,8 @@ export interface UserInfo {
 }
 
 interface UserLoginStore {
-    userLoginInfo: LoginResponse  | null;
-    setuserLoginInfo: (user: LoginResponse ) => void;
+    userLoginInfo: LoginResponse | null;
+    setuserLoginInfo: (user: LoginResponse) => void;
     clearuserLoginInfo: () => void;
 }
 
@@ -84,32 +84,29 @@ interface CartItem {
     slug: string;
     minQty: number;
     totalShippingAmount: number;
-  }
-
-
-interface GlobalStore {
-    watchListBind: boolean;
-    watchListList: string[];
-    cartListBind: boolean;
-    cartListList: CartItem[];
-    setWatchListBind: (bind: boolean) => void;
-    setWatchListList: (list: string[]) => void;
-    setCartListBind: (bind: boolean) => void;
-    setCartListList: (list: CartItem[]) => void;
 }
 
+interface GlobalStore {
+    cartListList: CartItem[];
+    userId: number;
+    setCartListList: (list: CartItem[]) => void;
+    setUserId: (userid: number) => void;
+}
 
 export const globalStore = create<GlobalStore>()(
     persist(
         (set) => ({
-            watchListBind: false,
-            watchListList: [],
-            cartListBind: false,
             cartListList: [],
-            setWatchListBind: (bind) => set({ watchListBind: bind }),
-            setWatchListList: (list) => set({ watchListList: list }),
-            setCartListBind: (bind) => set({ cartListBind: bind }),
+            userId: 0,
             setCartListList: (list) => set({ cartListList: list }),
+            setUserId: (userid: number) => {
+                const parsedUserId = Number(userid);
+                if (!isNaN(parsedUserId)) {
+                    set({ userId: parsedUserId });
+                } else {
+                    console.error("Invalid userId: Must be a number");
+                }
+            },
         }),
         {
             name: 'login-storage',
@@ -118,4 +115,24 @@ export const globalStore = create<GlobalStore>()(
     )
 );
 
+interface LoginStore {
+    email: string;
+    password: string;
+    setEmail: (no: string) => void;
+    setPassword: (no: string) => void;
+}
 
+export const LoginStore = create<LoginStore>()(
+    persist(
+        (set) => ({
+            email: '',
+            password: '',
+            setEmail: (no) => set({ email: no }),
+            setPassword: (no) => set({ password: no }),
+        }),
+        {
+            name: 'login-storage',
+            storage: createJSONStorage(() => localStorage),
+        }
+    )
+);

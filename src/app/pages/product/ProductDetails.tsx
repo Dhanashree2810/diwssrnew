@@ -14,12 +14,13 @@ import { LuBadgeCheck } from "react-icons/lu";
 import { BsBox } from "react-icons/bs";
 import { LuRotateCcw } from "react-icons/lu";
 import { IoLockClosedOutline } from "react-icons/io5";
-import { globalStore, useUserLoginStore } from '../../../../globalstate';
-import { cartQuantityUpdate } from '@/services/cart';
-import {  Product } from '@/types/auth';
+import { globalStore, LoginStore } from '../../../../globalstate';
+import { Product } from '@/types/auth';
+import { cartFunQuantityUpdate } from '@/app/actions/cart';
+import { getUserInfo } from '@/services/login';
 
 
-const ProductDetails = (props: { productData: Product}) => {
+const ProductDetails = (props: { productData: Product }) => {
     const [userInfo] = useState({ role: "Farmer" });
     const [discountPercent, setDiscountPercent] = useState(0);
     const [productImages, setProductImages] = useState<string[]>([]);
@@ -28,30 +29,38 @@ const ProductDetails = (props: { productData: Product}) => {
     const [zoom, setZoom] = useState(false);
     const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
     const { setCartListList } = globalStore();
-    const [userData, setUserData] = useState<number | undefined>();
-    const [userToken, setUserToken] = useState<string | undefined>();
-    const { userLoginInfo } = useUserLoginStore();
-  
     const productData = props.productData;
+    const { email, password } = LoginStore();
+    const [userId, setUserId] = useState();
 
     useEffect(() => {
-        const userId = userLoginInfo?.userInfo?.[0]?.id;
-        setUserData(userId);
-        const token = userLoginInfo?.token;
-        setUserToken(token);
-    }, [userLoginInfo]);
+        const fetchUserInfo = async () => {
+            try {
+                const data = await getUserInfo(email, password);
+
+                if (Array.isArray(data) && data.length > 0) {
+                    const userId = data[0]?.id;
+                    setUserId(userId);
+                } else {
+                    console.log("No user data found.");
+                }
+            } catch (error) {
+                console.error("Error fetching user info:", error);
+            }
+        };
+        fetchUserInfo();
+    }, [email, password]);
 
     useEffect(() => {
         const discount =
-      ((productData.regularPrice - productData.salePrice) /
-        productData.regularPrice) *
-      100;
-    setDiscountPercent(Math.round(discount));
-
-    // Set product images
-    const images = productData.image ? [productData.image] : [];
-    setProductImages(images);
-    setSelectedImage(images[0] || null);
+            ((productData.regularPrice - productData.salePrice) /
+                productData.regularPrice) *
+            100;
+        setDiscountPercent(Math.round(discount));
+        const images = productData.image ? [productData.image] : [];
+        setProductImages(images);
+        // const imageUrls = productData.image[0].split(",").map((url) => url.trim());
+        setSelectedImage(images[0] || null);
     }, [productData, userInfo.role]);
 
     const handleMouseEnter = () => {
@@ -93,8 +102,6 @@ const ProductDetails = (props: { productData: Product}) => {
         setQuantities({ [product.id]: product.quantity });
     }, [product]);
 
-   
-
     const handleIncrement = (id: string) => {
         setQuantities((prev) => ({
             ...prev,
@@ -127,15 +134,13 @@ const ProductDetails = (props: { productData: Product}) => {
             cgst: item.cgst,
             totalGst: 0,
             totalAmount: item.salePrice * item.minQty,
-            appUserId: userData,
+            appUserId: userId,
             image: item.image,
             minQty: item.minQty,
             totalShippingAmount: 0,
         };
-
         try {
-            const data = await cartQuantityUpdate(cartItemData, userToken);
-            console.log("data", data);
+            const data = await cartFunQuantityUpdate(cartItemData);
             setCartListList(data);
         } catch (error) {
             console.error("Error updating cart:", error);
@@ -152,21 +157,33 @@ const ProductDetails = (props: { productData: Product}) => {
                             <div className="relative flex flex-col justify-start items-start">
                                 <div className="relative">
                                     <div
-                                        className="w-[200px] h-[200px] lg:w-[500px] lg:h-[400px] relative overflow-hidden"
+                                        className="w-[200px] h-[200px] lg:w-[300px] lg:h-[300px] relative overflow-hidden"
                                         onMouseEnter={handleMouseEnter}
                                         onMouseLeave={handleMouseLeave}
                                         onMouseMove={handleMouseMove}
                                     >
                                         {selectedImage ? (
+                                            // <Image
+                                            //     src={selectedImage}
+                                            //     alt="Selected product image"
+                                            //     layout="fill"
+                                            //     objectFit="cover"
+                                            //     className={`cursor-pointer transition-transform duration-300 ${zoom ? "transform scale-125" : "transform scale-100"}`}
+                                            //     style={{
+                                            //         transformOrigin: `${cursorPosition.x}% ${cursorPosition.y}%`,
+                                            //         transition: "transform 0.3s ease",
+                                            //     }}
+                                            // />
                                             <Image
                                                 src={selectedImage}
                                                 alt="Selected product image"
-                                                layout="fill"
-                                                objectFit="cover"
-                                                className={`cursor-pointer transition-transform duration-300 ${zoom ? "transform scale-125" : "transform scale-100"}`}
+                                                fill 
+                                                className={`cursor-pointer transition-transform duration-300 ${zoom ? "scale-125" : "scale-100"
+                                                    }`}
                                                 style={{
                                                     transformOrigin: `${cursorPosition.x}% ${cursorPosition.y}%`,
                                                     transition: "transform 0.3s ease",
+                                                    objectFit: "cover"
                                                 }}
                                             />
                                         ) : (
@@ -239,9 +256,6 @@ const ProductDetails = (props: { productData: Product}) => {
                                         </h1>
 
                                     </div>
-                                    <div>
-                                        <p className=' text-xs lg:text-sm'>{product.desc}</p>
-                                    </div>
 
                                     <div className="flex flex-row gap-4 my-4">
                                         <Button
@@ -254,7 +268,7 @@ const ProductDetails = (props: { productData: Product}) => {
                                         </Button>
                                         <Input
                                             type="number"
-                                            value={quantities[product.id]}
+                                            defaultValue={quantities[product.id]}
                                             readOnly
                                             className="w-16 text-center border border-gray-300 rounded-md"
                                             aria-label="Quantity"
