@@ -79,7 +79,7 @@ export default function AppUserList(props: any) {
   const listTemplate = (items: any) => {
     if (!items || items.length === 0) return null;
 
-    let list = items.map((product: any) => {
+    const list = items.map((product: any) => {
       return itemTemplate(product);
     });
 
