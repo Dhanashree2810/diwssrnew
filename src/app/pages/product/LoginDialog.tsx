@@ -9,7 +9,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import LoginForm from '../login/LoginForm';
 import cartimg from '@/assets/images/cartimg.png';
 
 interface LoginDialogProps {
@@ -25,7 +24,6 @@ const LoginDialog = ({ showLoginPopup, setShowLoginPopup }: LoginDialogProps) =>
     setIsDialogOpen(true);
   };
 
-  const handleCloseDialog = () => setIsDialogOpen(false);
 
   return (
     <>
@@ -57,7 +55,6 @@ const LoginDialog = ({ showLoginPopup, setShowLoginPopup }: LoginDialogProps) =>
             </DialogHeader>
           </VisuallyHidden.Root>
           <div>
-            <LoginForm onCloseDialog={handleCloseDialog} />
           </div>
         </DialogContent>
       </Dialog>

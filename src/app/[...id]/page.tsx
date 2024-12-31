@@ -2,47 +2,57 @@ import ProductDetails from '@/app/pages/product/ProductDetails';
 import { getProductLiveByIdData, getProductLiveData } from '@/services/product';
 import { getProductSEOData } from '@/services/seo';
 import ProductList from '../pages/product/ProductList';
+import { redirect } from 'next/navigation';
+
 
 export async function generateMetadata({
   params,
 }: {
   params: Promise<{ id?: string[] }>
 }) {
-  const seos = await getProductSEOData();
-  const Id = (await params).id || [];
-  const seoName = Id.length === 0 ? 'product' : Id.join('/');
-  const seoData = seos.find((seo) => seo.name === seoName);
+  try {
+    const Id = (await params).id || [];
+    const seoName = Id.length === 0 ? Id[0] : Id.join('/');
+    const seos = await getProductSEOData(seoName);
+    const seoData = seos[0];
+    // console.log("SEO Data:", seoData);
 
-  // console.log("SEO Data:", seoData);
+    if (seoData) {
+      return {
+        title: seoData?.title,
+        description: seoData?.description,
+        keywords: seoData?.keyWords,
+        openGraph: {
+          title: seoData?.title,
+          description: seoData?.description,
+          images: [
+            {
+              url: seoData?.imageUrl,
+              alt: seoData?.title,
+            },
+          ],
+        },
+        twitter: {
+          title: seoData.title,
+          description: seoData.description,
+          images: [seoData.imageUrl],
+        },
+      };
+    }
+    redirect('404')
 
-  if (seoData) {
     return {
-      title: seoData.title,
-      description: seoData.description,
-      keywords: seoData.keyWords,
-      openGraph: {
-        title: seoData.title,
-        description: seoData.description,
-        images: [
-          {
-            url: seoData.imageUrl,
-            alt: seoData.title,
-          },
-        ],
-      },
-      twitter: {
-        card: 'summary_large_image',
-        title: seoData.title,
-        description: seoData.description,
-        images: [seoData.imageUrl],
-      },
+      title: 'Default Product Title',
+      description: 'Explore our product collection',
+    };
+  } catch (error) {
+    console.error("Error generating metadata:", error);
+    redirect('404')
+    return {
+      title: 'Default Product Title',
+      description: 'Explore our product collection',
     };
   }
-
-  return {
-    title: 'Default Product Title',
-    description: 'Explore our product collection',
-  };
 }
 
 const EditProductPage = async ({

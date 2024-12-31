@@ -18,9 +18,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import dynamic from 'next/dynamic';
-
-const LoginForm = dynamic(() => import('@/app/pages/login/LoginForm'), { ssr: false });
+import { LoginForm } from "@/app/components/login-form";
+import { logout } from "@/app/actions/auth";
 
 
 export default function NavbarPage() {
@@ -35,14 +34,18 @@ export default function NavbarPage() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-  
+
   const handleLoginForm = () => {
     setIsDialogOpen(true);
   };
 
-  const handleCloseDialog = () => {
-    setIsDialogOpen(false);
-  };
+  // const handleCloseDialog = () => {
+  //   setIsDialogOpen(false);
+  // };
+
+  const handleLogout = async () =>{
+    await logout();
+  }
 
   return (
     <div className={`fixed left-0 right-0 z-50 bg-white shadow transition-all duration-300 ${isScrolled ? 'h-12' : 'h-16'}`}>
@@ -70,25 +73,24 @@ export default function NavbarPage() {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-48 text-black bg-white">
                 <DropdownMenuGroup>
-                  <div onClick={handleLoginForm}>
+                  {<div onClick={handleLoginForm}>
                     <DropdownMenuItem className="cursor-pointer hover:bg-black hover:text-white">
                       <LogInIcon className="mr-2 h-3 w-3" />
                       <span>Login</span>
                     </DropdownMenuItem>
-                  </div>
-                  <Link href="/">
+                  </div>}
+                  {<div onClick={handleLogout}>
                     <DropdownMenuItem className="cursor-pointer hover:bg-black hover:text-white">
                       <LogOut className="mr-2 h-3 w-3" />
                       <span>Logout</span>
                     </DropdownMenuItem>
-                  </Link>
+                  </div>}
                 </DropdownMenuGroup>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </div>
       </nav>
-
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <VisuallyHidden.Root>
@@ -99,7 +101,7 @@ export default function NavbarPage() {
             </DialogHeader>
           </VisuallyHidden.Root>
           <div>
-            <LoginForm onCloseDialog={handleCloseDialog} />
+            <LoginForm/>
           </div>
         </DialogContent>
       </Dialog>

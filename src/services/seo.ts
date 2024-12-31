@@ -7,16 +7,15 @@ export interface SEOData {
     imageUrl: string;
   }
   
-  export async function getProductSEOData(): Promise<SEOData[]> {
+  export async function getProductSEOData(slug: string): Promise<SEOData[]> {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/Seo/SeoData`,
+        `${process.env.NEXT_PUBLIC_API_URL}/Seo/Search?name=${slug}`,
         {
-          method: "POST",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({}),
           cache: "no-cache",
         }
       );

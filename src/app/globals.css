@@ -101,6 +101,9 @@
 .custom-placeholder::placeholder {
   color: white;
 }
+.bg-background{
+  background-color: white;
+}
 
 @layer base {
   .bg-background {
