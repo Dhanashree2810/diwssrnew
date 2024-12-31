@@ -115,7 +115,7 @@ const AppUserMainForm = ({ appUserData }: any) => {
 
   useEffect(() => {
     getVerifyShopsData();
-  }, [appUserData]);
+  }, [userToken,appUserData]);
 
   const getVerifyShopsData = async () => {
     try {
@@ -359,8 +359,6 @@ const AppUserMainForm = ({ appUserData }: any) => {
       const isActiveBoolean = formData.isActive === true;
       const mobileVerifiedBoolean = formData.mobileVerified === true;
       const isAdminBoolean = formData.isAdmin === true;
-      const hasImpersonateAccessBoolean =
-        formData.hasImpersonateAccess === true;
 
       let result = globalschema.safeParse({
         name: formData.name,
